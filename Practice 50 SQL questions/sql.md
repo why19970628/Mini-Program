@@ -81,25 +81,25 @@ insert into SC values('07' , '03' , 98);
 
 # 2、表结构预览
 
---学生表
+- 学生表
 
 Student(SId,Sname,Sage,Ssex)
 
 --SId 学生编号,Sname 学生姓名,Sage 出生年月,Ssex 学生性别
 
---课程表
+- 课程表
 
 Course(CId,Cname,TId)
 
 --CId 课程编号,Cname 课程名称,TId 教师编号
 
---教师表
+- 教师表
 
 Teacher(TId,Tname)
 
 --TId 教师编号,Tname 教师姓名
 
---成绩表
+- 成绩表
 
 SC(SId,CId,score)
 
