@@ -4,24 +4,43 @@
 # 1.导入数据
 
 create database info;
+
 use info;
-create table Student(sid varchar(10),sname varchar(10),sage datetime,ssex nvarchar(10));
+
+create table Student(sid varchar(10),sname varchar(10),sage 
+datetime,ssex nvarchar(10));
+
 insert into Student values('01' , '赵雷' , '1990-01-01' , '男');
+
 insert into Student values('02' , '钱电' , '1990-12-21' , '男');
+
 insert into Student values('03' , '孙风' , '1990-05-20' , '男');
+
 insert into Student values('04' , '李云' , '1990-08-06' , '男');
+
 insert into Student values('05' , '周梅' , '1991-12-01' , '女');
+
 insert into Student values('06' , '吴兰' , '1992-03-01' , '女');
+
 insert into Student values('07' , '郑竹' , '1989-07-01' , '女');
+
 insert into Student values('08' , '王菊' , '1990-01-20' , '女');
+
 create table Course(cid varchar(10),cname varchar(10),tid varchar(10));
 insert into Course values('01' , '语文' , '02');
+
 insert into Course values('02' , '数学' , '01');
+
 insert into Course values('03' , '英语' , '03');
+
 create table Teacher(tid varchar(10),tname varchar(10));
+
 insert into Teacher values('01' , '张三');
+
 insert into Teacher values('02' , '李四');
+
 insert into Teacher values('03' , '王五');
+
 create table SC(sid varchar(10),cid varchar(10),score decimal(18,1));
 insert into SC values('01' , '01' , 80);
 insert into SC values('01' , '02' , 90);
