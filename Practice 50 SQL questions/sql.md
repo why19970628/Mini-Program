@@ -314,18 +314,18 @@ select distinct sc.sid from
 left join sc
 on t1.cid=sc.cid;
 
-## 12.****
+## 12.¸ü¸Ä
 
-select t1.sid,sname from 
+select t2.sid,sname from 
 (select sc.sid,count(distinct sc.cid) from  
 (select cid from sc where sid='01')t1
 left join sc
 	on t1.cid=sc.cid
 group by sc.sid
-having count(distinct sc.cid)=(select count(distinct cid) from sc where sid = '01'))t1
+having count(distinct sc.cid)=(select count(distinct cid) from sc where sid = '01'))t2
 left join student
-	on t1.sid=student.sid
-where t1.sid!='01';
+	on t2.sid=student.sid
+where t2.sid!='01';
 
 
 ## 13.ÎÞ
