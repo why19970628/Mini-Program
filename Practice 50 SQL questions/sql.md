@@ -328,7 +328,40 @@ left join student
 where t1.sid!='01';
 
 
-## 13.无
+## 13.
+- 构造求老师课程平均分的存储过程
+drop procedure if exists avg_score_by_cid;
+delimiter $$
+create procedure avg_score_by_cid(out parm_score int,in tname1 varchar(255))
+begin
+select avg(score) into parm_score from course inner join sc on course.cid=sc.cid inner join teacher on teacher.tid=course.tid where tname=tname1 group by course.cid;
+end;
+$$
+
+- 赋值
+delimiter ;
+call avg_score_by_cid(@parm_score,'张三');
+select @parm_score;
+
+
+
+- 构造求老师教的课程cid
+
+drop procedure if exists cid_by_tname;
+delimiter $$
+create procedure cid_by_tname(out parm_cid int,in tname1 varchar(255))
+begin
+select cid into parm_cid from course inner join teacher on course.tid=teacher.tid where tname=tname1 group by course.cid;
+end;
+$$
+
+delimiter ;
+call cid_by_tname(@parm_cid,'张三');
+select @parm_cid;
+
+- 更新
+update sc set score=@parm_score where sc.cid=@parm_cid;
+select score from sc where cid=@parm_cid;
 
 
 
@@ -396,7 +429,7 @@ select
 from sc 
 left join course
     on sc.cid=course.cid
-group by sc.cid
+group by sc.cid;
 
 ### 正确答案
 select sc.cid,cname,max(score) as max_score,
@@ -406,13 +439,6 @@ from sc
 left join course
 	on sc.cid=course.cid
 group by sc.cid,cname;
-
-
-
-
-
-
-
 
 
 
@@ -440,7 +466,9 @@ on teacher.tid=course.tid
 group by course.tid,tname
 order by avg_score desc;
 
-## 22.错误
+## 22.报错
+oracle的分析函数over(Partition by...)，Oracle从8.1.6开始提供分析函数，分析函数用于计算基于组的某种聚合值，它和聚合函数的不同之处是对于每个组返回多行，而聚合函数对于每个组只返回一行。
+需要升级版本。 
 
 select sid,cid,score,rank_num from(
 select rank() over(partition by cid order by score desc) as rank_num
