@@ -350,7 +350,7 @@ select @parm_score;
 
 
 
-- 构造求老师教的课程cid
+- 构造求老师教的课程cid的存储过程
 
 drop procedure if exists cid_by_tname;
 
