@@ -314,7 +314,7 @@ select distinct sc.sid from
 left join sc
 on t1.cid=sc.cid;
 
-## 12.****
+## 12.
 
 select t1.sid,sname from 
 (select sc.sid,count(distinct sc.cid) from  
@@ -328,7 +328,8 @@ left join student
 where t1.sid!='01';
 
 
-## 13.
+## 13.添加
+
 - 构造求老师课程平均分的存储过程
 
 drop procedure if exists avg_score_by_cid;
@@ -364,7 +365,9 @@ select cid into parm_cid from course inner join teacher on course.tid=teacher.ti
 $$
 
 delimiter ;
+
 call cid_by_tname(@parm_cid,'张三');
+
 select @parm_cid;
 
 - 更新
