@@ -170,11 +170,24 @@ SC(SId,CId,score)
 
 32、查询每门课程的平均成绩，结果按平均成绩升序排列，平均成绩相同时，按课程号降序排列
 
+33、查询平均成绩大于等于 85 的所有学生的学号、姓名和平均成绩
+
+34、查询课程名称为「数学」，且分数低于 60 的学生姓名和分数
+
+35、查询所有学生的课程及分数情况（存在学生没成绩，没选课的情况）
+
+36、查询任何一门课程成绩在 70 分以上的姓名、课程名称和分数
+
 37、查询不及格的课程，并按课程号从大到小排列
 
 38、查询课程编号为"01"且课程成绩在60分以上的学生的学号和姓名；
 
+39、求每门课程的学生人数
+
 40、查询选修“张三”老师所授课程的学生中，成绩最高的学生姓名及其成绩
+
+41、查询不同课程成绩相同的学生的学生编号、课程编号、学生成绩
+
 42、查询每门功课成绩最好的前两名
 
 43、统计每门课程的学生选修人数（超过5人的课程才统计）。要求输出课程号和选修人数，查询结果按人数降序排列，若人数相同，按课程号升序排列
@@ -411,11 +424,6 @@ group by sc.cid,cname;
 
 
 
-
-
-
-
-
 # 19.
 
 select cid,avg(score) as avg_score,count(if(score>=60,sid,null))/count(sid) as pass_rate
@@ -440,7 +448,7 @@ on teacher.tid=course.tid
 group by course.tid,tname
 order by avg_score desc;
 
-## 22.错误
+## 22.
 
 select sid,cid,score,rank_num from(
 select rank() over(partition by cid order by score desc) as rank_num
@@ -462,7 +470,35 @@ left join course
 group by sc.cid,cname
 
 
+## 24
+select
+    sid
+    ,avg_score
+    ,rank() over (order by avg_score desc) as ranks
+from 
+    (
+        select
+            sid
+            ,avg(score) as avg_score
+        from sc
+        group by sid
+    )t;
 
+
+## 25
+
+select
+    sid,cid,rank1,score
+from 
+    (
+        select
+            cid
+            ,sid
+	    ,score
+            ,rank() over(partition by cid order by score desc) as rank1
+        from sc
+    )t
+where rank1<=3;
 
 
 ## 26.改
@@ -518,7 +554,50 @@ select cid,avg(score) as avg_score from sc
 group by cid
 order by avg_score,cid desc;
 
-33-36 没有题
+
+
+## 33、查询平均成绩大于等于 85 的所有学生的学号、姓名和平均成绩
+select a.sid,sname,avg(score) from student a
+left join sc b
+on a.sid=b.sid
+group by sid
+having avg(score)>85;
+
+
+
+34、查询课程名称为「数学」，且分数低于 60 的学生姓名和分数
+
+方法一:
+
+select a.sid,sname,score from student a
+left join sc b
+on a.sid=b.sid
+left join course c
+on c.cid=b.cid
+where cname='数学' and score<60;
+
+方法二:
+
+select student.sname, sc.score from student, sc, course
+where student.sid = sc.sid
+and course.cid = sc.cid
+and course.cname = "数学"
+and sc.score < 60;
+
+
+35、查询所有学生的课程及分数情况（存在学生没成绩，没选课的情况）
+
+select a.sid,sname,cid,score from student a
+left join sc b
+on a.sid=b.sid;
+
+36、查询任何一门课程成绩在 70 分以上的姓名、课程名称和分数
+
+select a.sname,a.sid,cname,score from student a
+left join sc b on a.sid=b.sid
+left join course c on b.cid=c.cid
+where b.score>70;
+
 
 ## 37.
 
@@ -535,6 +614,15 @@ on student.sid=sc.sid
 where cid='01' and score>60;
 
 
+## 39 求每门课程的学生人数
+
+select cid,count(distinct sid) as count_sid
+from sc
+group by sc.cid;
+
+
+
+
 ## 40.
 
 select sc.sid,sname,cname,score from sc
@@ -549,25 +637,45 @@ order by score desc
 limit 1;
 
 
-## 41.无
+## 41.查询不同课程成绩相同的学生的学生编号、课程编号、学生成绩
 
 
-## 42 错误
+select distinct a.sid,a.cid,a.score from sc as a
+inner join sc as b
+on a.sid=b.sid
+and a.cid!=b.cid
+and a.score=b.score
+group by cid,sid;
 
-select sc.sid,sname,cname,score from sc
-left join course
-on sc.cid=course.cid
-left join student
-on sc.sid=student.sid
-left join teacher
-on teacher.tid=course.tid
-order by score desc
-limit 2;
 
-select * from(select row_number()
-over partition by cid order by score desc)rn,
-sid,cid,score from course)
-where rn<3;
+
+## 42 查询每门功课成绩最好的前两名
+
+方法一:
+
+select
+    cid,t.sid,b.sname,rank1
+from 
+    (
+        select
+            cid
+            ,sid
+            ,rank() over(partition by cid order by score desc) as rank1
+        from sc
+    )t
+left join student as b
+on t.sid=b.sid
+having rank1<=2
+order by cid;
+
+方法二:
+
+select a.sid,a.cid,a.score from sc as a 
+left join sc as b 
+on a.cid = b.cid and a.score<b.score
+group by a.cid, a.sid
+having count(b.cid)<2
+order by a.cid;
 
 
 
