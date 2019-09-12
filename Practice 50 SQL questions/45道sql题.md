@@ -78,8 +78,21 @@ INSERT INTO SCORE(SNO,CNO,DEGREE) VALUES (101,'6-166',85);
 INSERT INTO SCORE(SNO,CNO,DEGREE) VALUES (107,'6-166',79);
 INSERT INTO SCORE(SNO,CNO,DEGREE) VALUES (108,'6-166',81);
 
+# 2.表结构
+--学生表
+Student(Sno,Sname,Sbirthday,Sclass,Ssex)
+--SId 学生编号,Sname 学生姓名,Sbirthday 出生年月,Sclass 课程名字, Ssex 学生性别
+--课程表
+Course(Cno,Cname,Tno)
+--CId 课程编号,Cname 课程名称,TId 教师编号
+--教师表
+Teacher(Tno,Tname,Tsex,Tbirthday,Prof,depart)
+--TId 教师编号,Tname 教师姓名,Tbirthday 教室生日,Prof 教师职称,Depart 院系
+--成绩表
+Score(Sno,Cno,degree)
+--Sno 学生编号,Cno 课程编号,degree 分数
 
-# 2.题目：
+# 3.题目：
 1、 查询Student表中的所有记录的Sname、Ssex和Sclass列。
 
 
@@ -503,10 +516,9 @@ select stu.ssex,stu.sclass from student stu where sname='李军')
 and stu.sname !='李军'; 
 
 45、查询所有选修“计算机导论”课程的“男”同学的成绩表
-?
+
 
 select sc.sno,degree from score sc
 inner join course c inner join student stu
 on (sc.cno=c.cno and sc.sno=stu.sno)
 where c.cname='计算机导论' and stu.ssex='男';
-where 
