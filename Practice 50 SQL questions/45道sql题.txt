@@ -354,10 +354,9 @@ where t.tsex='女';
 
 33、查询成绩比该课程平均成绩低的同学的成绩表。
 
-select sc.sno,degree from score sc
-group 
-by sc.cno 
-having sc.degree<avg(sc.degree);
+select *
+from score sc
+WHERE sc.DEGREE<(select AVG(DEGREE) from score where sc.CNO=score.CNO);
 
 34、查询所有任课教师的Tname和Depart.
 
@@ -370,10 +369,17 @@ where t.tno  not in (select c.tno from course c);
 
 36、查询至少有2名男生的班号。
 
-select stu.sclass from student stu
-group by stu.sclass
-having count(sno)>=2;
+select DISTINCT s.SCLASS 
+from student s
+ 
+where s.SCLASS in 
+(
+select ss.SCLASS 
+from student ss 
+where ss.SSEX='男'
 
+GROUP BY ss.SCLASS 
+having COUNT(*)>=2);
 
 37、查询Student表中不姓“王”的同学记录。
 
